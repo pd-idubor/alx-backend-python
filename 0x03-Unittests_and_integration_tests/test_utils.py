@@ -8,6 +8,7 @@ from unittest.mock import patch, Mock
 from parameterized import parameterized, param
 from utils import access_nested_map
 from utils import get_json
+from utils import memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -43,8 +44,8 @@ class TestGetJson(unittest.TestCase):
     Test class that inherits from unittest
     """
     @parameterized.expand([
-        param('http://example.com', {'payload': True}),
-        param('http://holberton.io', {'payload': False}),
+        param("http://example.com", {"payload": True}),
+        param("http://holberton.io", {"payload": False}),
     ])
     def test_get_json(self, test_url, test_payload):
         """
@@ -52,9 +53,44 @@ class TestGetJson(unittest.TestCase):
         """
         mock = Mock()
         mock.json.return_value = test_payload
-        with patch('requests.get', return_value=mock):
+        with patch("requests.get", return_value=mock):
             self.assertEqual(get_json(test_url), test_payload)
 
 
-if __name__ == '__main__':
+class TestMemoize(unittest.TestCase):
+    """
+    Test class that inherits from unittest
+    """
+
+    def test_memoize(self):
+        """
+        Test method for test_memoize
+        """
+        class TestClass:
+            """
+            Test class
+            """
+
+            def a_method(self):
+                """
+                Test method for a_method
+                """
+                return 42
+
+            @memoize
+            def a_property(self):
+                """
+                Test method for a_property
+                """
+                return self.a_method()
+
+        test = TestClass()
+        with patch.object(test, "a_method") as mock_a_method:
+            test.a_property()
+            test.a_property()
+
+            mock_a_method.assert_called_once()
+
+
+if __name__ == "__main__":
     unittest.main()
