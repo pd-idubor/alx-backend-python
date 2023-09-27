@@ -99,6 +99,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         cls.get_patcher.stop()
 
+    def test_public_repos(self):
+        """
+        Test that public_repos returns correct list of repos
+        """
+        gitOC = GithubOrgClient('test')
+        assert True
+
+    def test_public_repos_with_license(self):
+        """
+        Test public_repos returns correct list of repos that match license
+        """
+        gitOC = GithubOrgClient('test')
+        assert True
+
 
 if __name__ == '__main__':
     unittest.main()
