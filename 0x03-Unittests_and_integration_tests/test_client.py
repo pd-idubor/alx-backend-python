@@ -38,6 +38,24 @@ class TestGithubOrgClient(unittest.TestCase):
                              'http://some_url')
             mock_url.assert_called_once_with()
 
+    @patch('client.get_json')
+    def test_public_repos(self, get_mock):
+        """
+        Test for GithubOrgClient.public_repos
+        """
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock) as mock_url:
+
+            mock_url.return_value = 'http://some_url'
+            get_mock.return_value = [
+                {'name': 'google'}, {'name': 'abc'}
+            ]
+            gitOC = GithubOrgClient('test')
+
+            self.assertEqual(gitOC.public_repos(), ['google', 'abc'])
+            mock_url.assert_called_once_with()
+            get_mock.assert_called_once_with('http://some_url')
+
 
 if __name__ == '__main__':
     unittest.main()
